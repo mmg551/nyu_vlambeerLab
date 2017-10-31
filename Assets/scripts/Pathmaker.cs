@@ -32,6 +32,7 @@ public class Pathmaker : MonoBehaviour {
     void Start(){
         leftProbability = Random.Range(.1f, .3f);
         rightProbability = Random.Range(.1f, .3f);
+
     }
 
 
@@ -91,13 +92,8 @@ public class Pathmaker : MonoBehaviour {
         else
         {
             Destroy(gameObject);
-            if (Input.GetKey(KeyCode.R))
-            {
-                Debug.Log("hi");
-                globalTileCount = 0;
-                counter = 0;
-                SceneManager.LoadScene(0);
-            }
+
+
         }// self destruct if I've made enough tiles already
         if (Input.GetKey(KeyCode.R))
         {
