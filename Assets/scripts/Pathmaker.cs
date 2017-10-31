@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 // MAZE PROC GEN LAB
 // all students: complete steps 1-6, as listed in this file
 // optional: if you have extra time, complete the "extra tasks" to do at the very bottom
@@ -15,25 +16,97 @@ public class Pathmaker : MonoBehaviour {
 // translate the pseudocode below
 
 //	DECLARE CLASS MEMBER VARIABLES:
-//	Declare a private integer called counter that starts at 0; 		// counter var will track how many floor tiles I've instantiated
+//	Declare a private integer called counter that starts at 0; 		
+    private int counter = 0;// counter var will track how many floor tiles I've instantiated
+    public static int globalTileCount = 0;
+
 //	Declare a public Transform called floorPrefab, assign the prefab in inspector;
-//	Declare a public Transform called pathmakerSpherePrefab, assign the prefab in inspector; 		// you'll have to make a "pathmakerSphere" prefab later
+    public Transform floorPrefab1;
+    public Transform floorPrefab2;
+    public Transform floorPrefab3;
+//	Declare a public Transform called pathmakerSpherePrefab, assign the prefab in inspector; 
+    public Transform pathmakerSpherePrefab;// you'll have to make a "pathmakerSphere" prefab later
+//    List<Pathmaker> myPathmakerList = new List<Pathmaker>();
+    float leftProbability = 0.2f;
+    float rightProbability = 0.2f;
+    void Start(){
+        leftProbability = Random.Range(.1f, .3f);
+        rightProbability = Random.Range(.1f, .3f);
+    }
 
 
 	void Update () {
+        
 //		If counter is less than 50, then:
 //		Generate a random number from 0.0f to 1.0f;
-//		If random number is less than 0.25f, then rotate myself 90 degrees;
-//			... Else if number is 0.25f-0.5f, then rotate myself -90 degrees;
-//			... Else if number is 0.99f-1.0f, then instantiate a pathmakerSpherePrefab clone at my current position;
-//		// end elseIf
+        if (counter < 100 && globalTileCount < 1000)
+        {
+            float randomNumber = Random.Range(0.0f, 1.0f);
 
+            // If random number is less than 0.25f, then rotate myself 90 degrees;
+            if (randomNumber < leftProbability)
+            {
+                transform.Rotate(0f, 90f, 0f);
+            }
+//			... Else if number is 0.25f-0.5f, then rotate myself -90 degrees;
+            else if (randomNumber > rightProbability && randomNumber < 0.4f)
+            {
+                transform.Rotate(0f, -90f, 0f);
+            }
+//			... Else if number is 0.99f-1.0f, then instantiate a pathmakerSpherePrefab clone at my current position;
+
+            else if (randomNumber > 0.95f && randomNumber < 1.0f)
+            {
+                
+                Instantiate(pathmakerSpherePrefab, transform.position, transform.rotation);
+
+
+            }
+//		// end elseIf
+           
 //		Instantiate a floorPrefab clone at current position;
+            float randoNum = Random.Range(0.0f, 1.0f);
+            if(randoNum < .75)
+            {
+                Instantiate(floorPrefab1, transform.position, transform.rotation);
+            }
+            if(randoNum > .75 && randoNum< .85)
+            {
+                Instantiate(floorPrefab2, transform.position, transform.rotation);
+            }
+            if(randoNum > .85)
+            {
+                Instantiate(floorPrefab3, transform.position, transform.rotation);
+            }
 
 //		Move forward ("forward" in local space, relative to the direction I'm facing) by 5 units;
+            transform.Translate(0f,0f,5f);
 //			Increment counter;
-//			Else:
-//			Destroy my game object; 		// self destruct if I've made enough tiles already
+            counter++;
+            globalTileCount++;
+
+        }
+//		Else:
+//			Destroy my game object; 
+        else
+        {
+            Destroy(gameObject);
+            if (Input.GetKey(KeyCode.R))
+            {
+                Debug.Log("hi");
+                globalTileCount = 0;
+                counter = 0;
+                SceneManager.LoadScene(0);
+            }
+        }// self destruct if I've made enough tiles already
+        if (Input.GetKey(KeyCode.R))
+        {
+            Debug.Log("hi");
+            globalTileCount = 0;
+            counter = 0;
+             SceneManager.LoadScene(0);
+           
+        }
 	}
 
 } // end of class scope
@@ -51,7 +124,8 @@ public class Pathmaker : MonoBehaviour {
 //	- put Pathmaker.cs on a sphere, configure all the prefabs in the Inspector, and test it to make sure it works
 //	STABILIZE: 
 //	- code it so that all the Pathmakers can only spawn a grand total of 500 tiles in the entire world; how would you do that?
-//	- (hint: declare a "public static int" and have each Pathmaker check this "globalTileCount", somewhere in your code? if there are already enough tiles, then maybe the Pathmaker could Destroy my game object
+//	- (hint: declare a "public static int" and have each Pathmaker check this "globalTileCount", somewhere in your code? 
+//if there are already enough tiles, then maybe the Pathmaker could Destroy my game object
 
 
 
